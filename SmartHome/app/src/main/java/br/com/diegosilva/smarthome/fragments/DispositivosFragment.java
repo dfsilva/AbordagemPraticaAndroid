@@ -25,8 +25,9 @@ public class DispositivosFragment extends Fragment {
     public DispositivosFragment() {
     }
 
-    public static DispositivosFragment newInstance(int columnCount) {
+    public static DispositivosFragment newInstance(OnListFragmentInteractionListener listener) {
         DispositivosFragment fragment = new DispositivosFragment();
+        fragment.mListener = listener;
         return fragment;
     }
 
@@ -52,23 +53,6 @@ public class DispositivosFragment extends Fragment {
         return view;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {

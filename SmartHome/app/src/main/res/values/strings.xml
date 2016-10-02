@@ -10,4 +10,7 @@
     <string name="editar">Editar</string>
     <string name="selecione_acao">Selecione a Ação</string>
 
+    <string name="titulo">Título</string>
+    <string name="codigo">Código</string>
+
 </resources>

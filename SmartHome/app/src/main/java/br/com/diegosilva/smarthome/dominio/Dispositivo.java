@@ -11,6 +11,6 @@ public class Dispositivo {
     public int id;
     public String titulo;
     public String codigo;
-    public List<String> acoes;
+    public List<Acao> acoes;
 
 }

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import br.com.diegosilva.smarthome.dominio.Dispositivo;
 import br.com.diegosilva.smarthome.sqlite.SmartHomeSQLiteHelper;
 
@@ -68,7 +71,7 @@ public class DispositivoDAO {
         return retorno;
     }
 
-    public Dispositivo update(Dispositivo dispositivo) {
+    public Dispositivo atualizar(Dispositivo dispositivo) {
 
         ContentValues values = new ContentValues();
 
@@ -79,51 +82,55 @@ public class DispositivoDAO {
 
         bd.update(NOME_TABELA, values, COLUNA_ID + " = ?", new String[] { String.valueOf(dispositivo.id) });
 
-        Cursor cursor = database.query(NOME_TABELA, allColumns, COLUNA_ID + " = " + caixa.getId(), null, null, null, null);
+        Cursor cursor = bd.query(NOME_TABELA, colunas, COLUNA_ID + " = " + dispositivo.id, null, null, null, null);
 
         cursor.moveToFirst();
-        Caixa novoCaixa = cursorToCaixa(cursor);
+        Dispositivo novoDispositivo = cursorParaDispositivo(cursor);
         cursor.close();
-        return novoCaixa;
+        return novoDispositivo;
     }
 
-    public void delete(Caixa caixa) {
-        long id = caixa.getId();
-        database.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
+    public void excluir(Dispositivo dispositivo) {
+        long id = dispositivo.id;
+        SQLiteDatabase bd = dbHelper.getWritableDatabase();
+
+        bd.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
     }
 
-    public void delete(Long id) {
-        database.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
+    public void delete(int id) {
+        SQLiteDatabase bd = dbHelper.getWritableDatabase();
+        bd.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
     }
 
-    public List<Caixa> all() {
-        List<Caixa> caixas = new ArrayList<Caixa>();
+    public List<Dispositivo> all() {
+        List<Dispositivo> dispositivos = new ArrayList<Dispositivo>();
 
-        Cursor cursor = database.query(NOME_TABELA, allColumns, null, null, null, null, null);
+        SQLiteDatabase bd = dbHelper.getReadableDatabase();
+
+        Cursor cursor = bd.query(NOME_TABELA, colunas, null, null, null, null, null);
 
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {
-            Caixa video = cursorToCaixa(cursor);
-            caixas.add(video);
+            Dispositivo video = cursorParaDispositivo(cursor);
+            dispositivos.add(video);
             cursor.moveToNext();
         }
 
         cursor.close();
-        return caixas;
+
+        return dispositivos;
     }
 
-    public Caixa load(Long id) {
-        if (database == null) {
-            this.open();
-        }
+    public Dispositivo load(Long id) {
 
-        Cursor cursor = database.query(NOME_TABELA, allColumns, COLUNA_ID + " = " + id, null, null, null, null);
+        SQLiteDatabase bd = dbHelper.getReadableDatabase();
+        Cursor cursor = bd.query(NOME_TABELA, colunas, COLUNA_ID + " = " + id, null, null, null, null);
 
-        Caixa caixa = null;
+        Dispositivo caixa = null;
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            caixa = cursorToCaixa(cursor);
+            caixa = cursorParaDispositivo(cursor);
         }
 
         cursor.close();
