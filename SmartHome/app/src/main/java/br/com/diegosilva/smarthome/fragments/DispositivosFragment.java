@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.diegosilva.smarthome.R;
+import br.com.diegosilva.smarthome.dao.DispositivoDAO;
 import br.com.diegosilva.smarthome.dominio.Dispositivo;
 
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ import java.util.List;
 
 public class DispositivosFragment extends Fragment {
 
-
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
+    private DispositivoDAO dao;
 
     public DispositivosFragment() {
     }
@@ -34,6 +35,7 @@ public class DispositivosFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dao = new DispositivoDAO(getContext());
     }
 
     @Override
@@ -45,7 +47,9 @@ public class DispositivosFragment extends Fragment {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            List<Dispositivo> dispositivos = new ArrayList<>();
+            List<Dispositivo> dispositivos = dao.listar();
+
+
             recyclerView.setAdapter(new DispositivoRecyclerViewAdapter(dispositivos, mListener));
             registerForContextMenu(recyclerView);
         }

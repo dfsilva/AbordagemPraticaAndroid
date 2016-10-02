@@ -6,7 +6,8 @@ package br.com.diegosilva.smarthome.dominio;
 
 public class Acao {
 
-    public int id;
+    public long id;
     public String titulo;
     public String codigo;
+    public Dispositivo dispositivo;
 }

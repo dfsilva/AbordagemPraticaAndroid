@@ -1,5 +1,6 @@
 package br.com.diegosilva.smarthome.dominio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,9 +9,17 @@ import java.util.List;
 
 public class Dispositivo {
 
-    public int id;
+    public long id;
     public String titulo;
     public String codigo;
-    public List<Acao> acoes;
+    public List<Acao> acoes = new ArrayList<>();
+
+    public Dispositivo(){
+
+    }
+
+    public Dispositivo(long id){
+        this.id = id;
+    }
 
 }
