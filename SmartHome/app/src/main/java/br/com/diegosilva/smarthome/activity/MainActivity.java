@@ -19,6 +19,7 @@ import java.util.List;
 import br.com.diegosilva.smarthome.R;
 import br.com.diegosilva.smarthome.dominio.Dispositivo;
 import br.com.diegosilva.smarthome.fragment.ListarDispositivosFragment;
+import br.com.diegosilva.smarthome.fragment.PerfilFragment;
 import br.com.diegosilva.smarthome.fragment.adapter.DispositivoRecyclerViewAdapter;
 
 public class MainActivity extends AppCompatActivity
@@ -54,10 +55,19 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.conteudo, ListarDispositivosFragment.newInstance(new ListarDispositivosFragment.OnListFragmentInteractionListener() {
             @Override
             public void onListFragmentInteraction(Dispositivo item) {
-
+                detalher(item);
             }
         })).commit();
 
+    }
+
+    private void detalher(Dispositivo dispositivo){
+        Intent i = new Intent(MainActivity.this, DetalheDispositivoActivity.class);
+        Bundle b = new Bundle();
+        b.putLong("id_dispositivo", dispositivo.id);
+        i.putExtras(b);
+
+        startActivity(i);
     }
 
     @Override
@@ -76,18 +86,16 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.inicio) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.conteudo, ListarDispositivosFragment.newInstance(new ListarDispositivosFragment.OnListFragmentInteractionListener() {
+                @Override
+                public void onListFragmentInteraction(Dispositivo item) {
+                    detalher(item);
+                }
+            })).commit();
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.perfil) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.conteudo, PerfilFragment.newInstance()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -102,7 +110,7 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.conteudo, ListarDispositivosFragment.newInstance(new ListarDispositivosFragment.OnListFragmentInteractionListener() {
                 @Override
                 public void onListFragmentInteraction(Dispositivo item) {
-
+                    detalher(item);
                 }
             })).commit();
         }

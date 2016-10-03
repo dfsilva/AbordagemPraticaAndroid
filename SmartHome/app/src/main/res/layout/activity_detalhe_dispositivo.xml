@@ -9,25 +9,32 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     tools:context="br.com.diegosilva.smarthome.activity.DetalheDispositivoActivity">
 
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txTitulo"/>
+        android:layout_marginTop="10dp"
+        android:id="@+id/txTitulo"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txCodigo"/>
-
+        android:id="@+id/txCodigo"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"/>
 
     <LinearLayout
         android:id="@+id/painelAcoes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
     </LinearLayout>
 
