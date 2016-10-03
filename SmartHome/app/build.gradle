@@ -16,12 +16,36 @@ android {
 //            enabled false
 //        }
     }
-    buildTypes {
+
+    Properties props = new Properties()
+    props.load(new FileInputStream(file("../keystore.properties")))
+
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            storeFile file(props['path'])
+            storePassword props['password']
+            keyAlias "smarthome"
+            keyPassword props['password']
         }
     }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+
 //    compileOptions {
 //        targetCompatibility 1.8
 //        sourceCompatibility 1.8
