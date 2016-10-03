@@ -1,4 +1,4 @@
-package br.com.diegosilva.smarthome.fragments;
+package br.com.diegosilva.smarthome.fragment.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -8,20 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import br.com.diegosilva.smarthome.R;
 import br.com.diegosilva.smarthome.dominio.Dispositivo;
-import java.util.List;
+import br.com.diegosilva.smarthome.fragment.ListarDispositivosFragment;
 
 
 public class DispositivoRecyclerViewAdapter
-        extends RecyclerView.Adapter<DispositivoRecyclerViewAdapter.ViewHolder>{
+        extends RecyclerView.Adapter<DispositivoRecyclerViewAdapter.ViewHolder> {
 
     private final List<Dispositivo> dispositivos;
-    private DispositivosFragment.OnListFragmentInteractionListener mListener;
+    private ListarDispositivosFragment.OnListFragmentInteractionListener mListener;
     private int posicao;
 
     public DispositivoRecyclerViewAdapter(List<Dispositivo> dispositivos,
-                                          DispositivosFragment.OnListFragmentInteractionListener listener) {
+                                          ListarDispositivosFragment.OnListFragmentInteractionListener listener) {
         this.dispositivos = dispositivos;
         this.mListener = listener;
     }
@@ -29,7 +31,7 @@ public class DispositivoRecyclerViewAdapter
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_dispositivo, parent, false);
+                .inflate(R.layout.fragment_listar_dispositivos, parent, false);
         return new ViewHolder(view);
     }
 
@@ -73,12 +75,16 @@ public class DispositivoRecyclerViewAdapter
         this.posicao = posicao;
     }
 
+    public Dispositivo getDispositivo(int posicao) {
+        return dispositivos.get(posicao);
+    }
+
     @Override
     public int getItemCount() {
         return dispositivos.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         public final View mView;
         public final TextView txTitulo;
         public final TextView txCodigo;

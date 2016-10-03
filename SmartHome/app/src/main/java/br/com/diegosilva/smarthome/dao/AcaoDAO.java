@@ -10,7 +10,6 @@ import java.util.List;
 
 import br.com.diegosilva.smarthome.dominio.Acao;
 import br.com.diegosilva.smarthome.dominio.Dispositivo;
-import br.com.diegosilva.smarthome.sqlite.SmartHomeSQLiteHelper;
 
 /**
  * Created by 98379720172 on 30/09/16.
@@ -18,7 +17,7 @@ import br.com.diegosilva.smarthome.sqlite.SmartHomeSQLiteHelper;
 
 public class AcaoDAO {
 
-    private SmartHomeSQLiteHelper dbHelper;
+    private SQLiteHelper dbHelper;
 
     public static final String NOME_TABELA = "acao";
 
@@ -28,18 +27,18 @@ public class AcaoDAO {
     public static final String COLUNA_ID_DISPOSITIVO = "id_dispositivo";
 
     public static final String SCRIPT_CRIACAO = "create table " + NOME_TABELA + "(" + COLUNA_ID + " integer primary key, " + COLUNA_TITULO
-            + " text not null, "+ COLUNA_CODIGO+ " text not null, "+ COLUNA_ID_DISPOSITIVO+ " integer not null "+");";
+            + " text not null, " + COLUNA_CODIGO + " text not null, " + COLUNA_ID_DISPOSITIVO + " integer not null " + ");";
 
-    public static final String[] colunas = { COLUNA_ID, COLUNA_TITULO, COLUNA_CODIGO, COLUNA_ID_DISPOSITIVO};
+    public static final String[] colunas = {COLUNA_ID, COLUNA_TITULO, COLUNA_CODIGO, COLUNA_ID_DISPOSITIVO};
 
     public AcaoDAO(Context context) {
-        dbHelper = SmartHomeSQLiteHelper.getHelper(context);
+        dbHelper = SQLiteHelper.getHelper(context);
     }
 
 
     public long criar(Acao acao, SQLiteDatabase bd) {
 
-        if(bd == null)
+        if (bd == null)
             bd = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -53,8 +52,10 @@ public class AcaoDAO {
         return id;
     }
 
-    public int excluirPeloDispositivo(long idDispositivo) {
-        SQLiteDatabase bd = dbHelper.getWritableDatabase();
+    public int excluirPeloDispositivo(long idDispositivo, SQLiteDatabase bd) {
+
+        if(bd == null)
+         bd = dbHelper.getWritableDatabase();
         return bd.delete(NOME_TABELA, COLUNA_ID_DISPOSITIVO + " = " + idDispositivo, null);
     }
 
@@ -62,7 +63,7 @@ public class AcaoDAO {
 
         List<Acao> acoes = new ArrayList<>();
 
-        if(bd == null)
+        if (bd == null)
             bd = dbHelper.getReadableDatabase();
 
         Cursor cursor = bd.query(NOME_TABELA, colunas, COLUNA_ID_DISPOSITIVO + " = " + idDispositivo, null, null, null, null);
@@ -77,7 +78,6 @@ public class AcaoDAO {
         cursor.close();
         return acoes;
     }
-
 
 
     private Acao cursorParaAcao(Cursor cursor) {

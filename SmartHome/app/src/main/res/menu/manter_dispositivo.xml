@@ -6,5 +6,5 @@
         android:orderInCategory="100"
         android:title="Salvar"
         app:showAsAction="always"
-        android:icon="@drawable/ic_content_save_white_24dp"/>
+        android:icon="@drawable/ic_content_save_white_24dp" />
 </menu>

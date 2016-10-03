@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/titulo"
             android:maxLines="1"
-            android:inputType="text"/>
+            android:inputType="text" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/codigo"
             android:maxLines="1"
-            android:inputType="text"/>
+            android:inputType="text" />
     </android.support.design.widget.TextInputLayout>
 
 

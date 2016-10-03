@@ -1,10 +1,10 @@
-package br.com.diegosilva.smarthome;
+package br.com.diegosilva.smarthome.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import br.com.diegosilva.smarthome.R;
-import br.com.diegosilva.smarthome.fragments.ManterDispositivoFragment;
+import br.com.diegosilva.smarthome.fragment.ManterDispositivoFragment;
 
 public class ManterDispositivoActivity extends AppCompatActivity {
 
@@ -13,6 +13,7 @@ public class ManterDispositivoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manter_dispositivo);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.conteudo, new ManterDispositivoFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.conteudo, ManterDispositivoFragment.newInstance(getIntent().getExtras())).commit();
+
     }
 }

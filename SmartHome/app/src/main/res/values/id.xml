@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item type="id" name="menu_excluir"/>
-    <item type="id" name="menu_editar"/>
+    <item type="id" name="menu_excluir" />
+    <item type="id" name="menu_editar" />
 </resources>

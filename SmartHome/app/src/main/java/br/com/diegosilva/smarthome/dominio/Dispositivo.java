@@ -14,11 +14,11 @@ public class Dispositivo {
     public String codigo;
     public List<Acao> acoes = new ArrayList<>();
 
-    public Dispositivo(){
+    public Dispositivo() {
 
     }
 
-    public Dispositivo(long id){
+    public Dispositivo(long id) {
         this.id = id;
     }
 

@@ -4,14 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.diegosilva.smarthome.dominio.Acao;
 import br.com.diegosilva.smarthome.dominio.Dispositivo;
-import br.com.diegosilva.smarthome.sqlite.SmartHomeSQLiteHelper;
 
 /**
  * Created by 98379720172 on 30/09/16.
@@ -19,7 +17,7 @@ import br.com.diegosilva.smarthome.sqlite.SmartHomeSQLiteHelper;
 
 public class DispositivoDAO {
 
-    private SmartHomeSQLiteHelper dbHelper;
+    private SQLiteHelper dbHelper;
     private Context context;
 
     public static final String NOME_TABELA = "dispositivo";
@@ -29,33 +27,16 @@ public class DispositivoDAO {
     public static final String COLUNA_CODIGO = "codito";
 
     public static final String SCRIPT_CRIACAO = "create table " + NOME_TABELA + "(" + COLUNA_ID + " integer primary key, " + COLUNA_TITULO
-            + " text not null, "+ COLUNA_CODIGO+ " text null "+");";
+            + " text not null, " + COLUNA_CODIGO + " text null " + ");";
 
-    public static final String[] colunas = { COLUNA_ID, COLUNA_TITULO, COLUNA_CODIGO };
+    public static final String[] colunas = {COLUNA_ID, COLUNA_TITULO, COLUNA_CODIGO};
 
     public DispositivoDAO(Context context) {
-        dbHelper = SmartHomeSQLiteHelper.getHelper(context);
+        dbHelper = SQLiteHelper.getHelper(context);
         this.context = context;
     }
 
-    public Dispositivo criar(String titulo, String codigo) {
-        ContentValues values = new ContentValues();
-
-        values.put(COLUNA_TITULO, titulo);
-        values.put(COLUNA_CODIGO, codigo);
-
-        SQLiteDatabase bd = dbHelper.getWritableDatabase();
-
-        long id = bd.insert(NOME_TABELA, null, values);
-
-        Cursor cursor = bd.query(NOME_TABELA, colunas, COLUNA_ID + " = " + id, null, null, null, null);
-        cursor.moveToFirst();
-        Dispositivo dispositivo = cursorParaDispositivo(cursor);
-        cursor.close();
-        return dispositivo;
-    }
-
-    public long criar(Dispositivo dispositivo) throws Exception{
+    public long criar(Dispositivo dispositivo) throws Exception {
 
         SQLiteDatabase bd = dbHelper.getWritableDatabase();
         bd.beginTransaction();
@@ -69,10 +50,10 @@ public class DispositivoDAO {
             long id = bd.insert(NOME_TABELA, null, values);
             dispositivo.id = id;
 
-            if(!dispositivo.acoes.isEmpty()){
+            if (!dispositivo.acoes.isEmpty()) {
                 AcaoDAO acaoDAO = new AcaoDAO(context);
 
-                for (Acao acao: dispositivo.acoes){
+                for (Acao acao : dispositivo.acoes) {
                     acao.dispositivo = dispositivo;
                     acao.id = acaoDAO.criar(acao, bd);
                 }
@@ -80,14 +61,14 @@ public class DispositivoDAO {
 
             bd.setTransactionSuccessful();
             return id;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
         } finally {
             bd.endTransaction();
         }
     }
 
-    public Dispositivo atualizar(Dispositivo dispositivo) throws Exception{
+    public Dispositivo atualizar(Dispositivo dispositivo) throws Exception {
 
         SQLiteDatabase bd = dbHelper.getWritableDatabase();
         bd.beginTransaction();
@@ -97,36 +78,47 @@ public class DispositivoDAO {
             values.put(COLUNA_TITULO, dispositivo.titulo);
             values.put(COLUNA_CODIGO, dispositivo.codigo);
 
-            bd.update(NOME_TABELA, values, COLUNA_ID + " = ?", new String[] { String.valueOf(dispositivo.id) });
+            bd.update(NOME_TABELA, values, COLUNA_ID + " = ?", new String[]{String.valueOf(dispositivo.id)});
 
             AcaoDAO acaoDAO = new AcaoDAO(context);
-            acaoDAO.excluirPeloDispositivo(dispositivo.id);
 
-            for (Acao acao: dispositivo.acoes){
+            acaoDAO.excluirPeloDispositivo(dispositivo.id, bd);
+
+            for (Acao acao : dispositivo.acoes) {
                 acao.dispositivo = dispositivo;
                 acao.id = acaoDAO.criar(acao, bd);
             }
 
+            bd.setTransactionSuccessful();
+
             return dispositivo;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
-        }finally {
+        } finally {
             bd.endTransaction();
         }
     }
 
 
-    public void excluir(Dispositivo dispositivo) {
+    public void excluir(Dispositivo dispositivo) throws Exception {
         long id = dispositivo.id;
         SQLiteDatabase bd = dbHelper.getWritableDatabase();
+        bd.beginTransaction();
+        try {
+            AcaoDAO acaoDAO = new AcaoDAO(context);
+            acaoDAO.excluirPeloDispositivo(dispositivo.id, bd);
 
-        bd.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
+            bd.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
+
+            bd.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            bd.endTransaction();
+        }
     }
 
-    public void delete(int id) {
-        SQLiteDatabase bd = dbHelper.getWritableDatabase();
-        bd.delete(NOME_TABELA, COLUNA_ID + " = " + id, null);
-    }
 
     public List<Dispositivo> listar() {
         List<Dispositivo> dispositivos = new ArrayList<>();
@@ -145,19 +137,20 @@ public class DispositivoDAO {
         return dispositivos;
     }
 
-    public Dispositivo load(Long id) {
+    public Dispositivo carregar(Long id) {
 
         SQLiteDatabase bd = dbHelper.getReadableDatabase();
         Cursor cursor = bd.query(NOME_TABELA, colunas, COLUNA_ID + " = " + id, null, null, null, null);
 
-        Dispositivo caixa = null;
+        Dispositivo dispositivo = null;
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
-            caixa = cursorParaDispositivo(cursor);
+            dispositivo = cursorParaDispositivo(cursor);
+            dispositivo.acoes = new AcaoDAO(context).carregarPeloDispositivo(dispositivo.id, bd);
         }
 
         cursor.close();
-        return caixa;
+        return dispositivo;
     }
 
     private Dispositivo cursorParaDispositivo(Cursor cursor) {

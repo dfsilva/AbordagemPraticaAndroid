@@ -1,25 +1,22 @@
-package br.com.diegosilva.smarthome.sqlite;
+package br.com.diegosilva.smarthome.dao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import br.com.diegosilva.smarthome.dao.AcaoDAO;
-import br.com.diegosilva.smarthome.dao.DispositivoDAO;
-
 /**
  * Created by 98379720172 on 30/09/16.
  */
 
-public class SmartHomeSQLiteHelper extends SQLiteOpenHelper {
+public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String NOME_BANCO = "smart_home.db";
     private static final int VERSAO_BANCO = 2;
 
-    private static SmartHomeSQLiteHelper instance;
+    private static SQLiteHelper instance;
 
 
-    private SmartHomeSQLiteHelper(Context context) {
+    private SQLiteHelper(Context context) {
         super(context, NOME_BANCO, null, VERSAO_BANCO);
     }
 
@@ -43,9 +40,9 @@ public class SmartHomeSQLiteHelper extends SQLiteOpenHelper {
         super.onOpen(db);
     }
 
-    public static synchronized SmartHomeSQLiteHelper getHelper(Context context) {
+    public static synchronized SQLiteHelper getHelper(Context context) {
         if (instance == null)
-            instance = new SmartHomeSQLiteHelper(context);
+            instance = new SQLiteHelper(context);
         return instance;
     }
 }
